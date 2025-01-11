@@ -40,7 +40,7 @@ package-lock.json
 package.json
 
 ### Prettier Config ###
-prettierrc.yml
+.prettierrc.yml
 
 ### Node Modules ###
 node_modules/
