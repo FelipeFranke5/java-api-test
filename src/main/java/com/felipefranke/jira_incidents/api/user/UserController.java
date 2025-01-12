@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/api/user", produces = "application/xml")
+@RequestMapping(path = "/api/user")
 public class UserController {
 
     private final UserService userService;

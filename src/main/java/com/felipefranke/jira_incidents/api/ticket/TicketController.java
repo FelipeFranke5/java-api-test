@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/api/ticket", produces = "application/xml")
+@RequestMapping(path = "/api/ticket")
 public class TicketController {
 
     private final TicketService ticketService;

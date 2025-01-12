@@ -1,6 +1,5 @@
 package com.felipefranke.jira_incidents.api.mail_to_case;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +20,6 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JacksonXmlRootElement
 public class MailToCase {
 
     @Id

@@ -1,6 +1,5 @@
 package com.felipefranke.jira_incidents.api.ticket;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.felipefranke.jira_incidents.api.jira_case.JiraCase;
 import com.felipefranke.jira_incidents.api.mail_to_case.MailToCase;
 import com.felipefranke.jira_incidents.api.user.User;
@@ -17,7 +16,6 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JacksonXmlRootElement
 public class Ticket {
 
     @Id

@@ -1,6 +1,5 @@
 package com.felipefranke.jira_incidents.api.jira_case;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +21,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JacksonXmlRootElement
 public class JiraCase {
 
     @Id

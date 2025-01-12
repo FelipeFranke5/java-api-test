@@ -1,6 +1,5 @@
 package com.felipefranke.jira_incidents.api.role;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.felipefranke.jira_incidents.api.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,7 +23,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JacksonXmlRootElement
 public class Role {
 
     public Role(String name) {

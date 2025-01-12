@@ -1,6 +1,5 @@
 package com.felipefranke.jira_incidents.api.user;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.felipefranke.jira_incidents.api.role.Role;
 import com.felipefranke.jira_incidents.api.ticket.Ticket;
 import com.felipefranke.jira_incidents.api.token.Token;
@@ -32,7 +31,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JacksonXmlRootElement
 public class User {
 
     @Id
