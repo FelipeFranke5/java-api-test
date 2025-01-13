@@ -1,3 +1,5 @@
 package com.felipefranke.jira_incidents.api.user;
 
-public record UserResponse(Long id, String username, String email, boolean isActive) {}
+import java.util.UUID;
+
+public record UserResponse(UUID id, String username, String email, boolean isActive) {}

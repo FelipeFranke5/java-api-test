@@ -2,6 +2,7 @@ package com.felipefranke.jira_incidents.api.authentication;
 
 import com.felipefranke.jira_incidents.api.user.User;
 import com.felipefranke.jira_incidents.api.user.UserService;
+import java.util.UUID;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -21,13 +22,13 @@ public class AuthenticationAspect {
     public void validateHeader(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
 
-        Long userId = null;
+        UUID userId = null;
         String authorizationHeader = null;
         String acceptHeader = null;
 
         for (Object arg : args) {
-            if (arg instanceof Long) {
-                userId = (Long) arg;
+            if (arg instanceof UUID) {
+                userId = (UUID) arg;
             } else if (arg instanceof String && authorizationHeader == null) {
                 authorizationHeader = (String) arg;
             } else if (arg instanceof String) {

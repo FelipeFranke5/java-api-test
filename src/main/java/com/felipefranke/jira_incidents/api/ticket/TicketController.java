@@ -36,7 +36,7 @@ public class TicketController {
     @AuthenticateHeader
     @GetMapping(path = "/list_all/user/{userId}")
     public ResponseEntity<Tickets> listTickets(
-        @PathVariable Long userId,
+        @PathVariable UUID userId,
         @RequestHeader("Authorization") String authorizationHeader,
         @RequestHeader("Accept") String acceptHeader
     ) {
@@ -64,7 +64,7 @@ public class TicketController {
     @AuthenticateHeader
     @GetMapping(path = "/list_one/user/{userId}/ticket/{ticketId}")
     public ResponseEntity<TicketResponse> oneTicket(
-        @PathVariable Long userId,
+        @PathVariable UUID userId,
         @PathVariable UUID ticketId,
         @RequestHeader("Authorization") String authorizationHeader,
         @RequestHeader("Accept") String acceptHeader
@@ -86,7 +86,7 @@ public class TicketController {
     @AuthenticateHeader
     @GetMapping(path = "/extract/email/user/{userId}")
     public ResponseEntity<Void> sendNotificationWithTickets(
-        @PathVariable Long userId,
+        @PathVariable UUID userId,
         @RequestHeader("Authorization") String authorizationHeader,
         @RequestHeader("Accept") String acceptHeader
     ) {
@@ -98,30 +98,22 @@ public class TicketController {
     @UserActivityCheck
     @AuthenticateHeader
     @PostMapping(path = "/create/user/{userId}/")
-    public ResponseEntity<TicketResponse> saveTicket(
-        @PathVariable Long userId,
+    public ResponseEntity<Void> saveTicket(
+        @PathVariable UUID userId,
         @RequestHeader("Authorization") String authorizationHeader,
         @RequestHeader("Accept") String acceptHeader,
         @RequestBody TicketRequest ticketRequest
     ) {
         User user = userService.getOneUserById(userId);
-        Ticket createdTicket = ticketService.saveTicket(ticketRequest, user);
-        TicketResponse ticketResponse = new TicketResponse(
-            createdTicket.getId(),
-            createdTicket.getUser().getName(),
-            createdTicket.isCompleted(),
-            createdTicket.getCreationDateTime(),
-            createdTicket.getMailToCase(),
-            createdTicket.getJiraCase()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(ticketResponse);
+        ticketService.saveTicket(ticketRequest, user);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @UserActivityCheck
     @AuthenticateHeader
     @PatchMapping(path = "/complete/user/{userId}/ticket/{ticketId}")
     public ResponseEntity<Void> markDone(
-        @PathVariable Long userId,
+        @PathVariable UUID userId,
         @PathVariable UUID ticketId,
         @RequestHeader("Authorization") String authorizationHeader,
         @RequestHeader("Accept") String acceptHeader

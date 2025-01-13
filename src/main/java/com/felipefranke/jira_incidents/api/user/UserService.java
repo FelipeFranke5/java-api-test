@@ -43,7 +43,7 @@ public class UserService {
         this.tokenService.incrementUses(user.getToken());
     }
 
-    public User getOneUserById(Long id) {
+    public User getOneUserById(UUID id) {
         Optional<User> user = repository.findById(id);
 
         if (user.isEmpty()) {
@@ -146,7 +146,7 @@ public class UserService {
         return user;
     }
 
-    public void createNewCredentials(Long id) {
+    public void createNewCredentials(UUID id) {
         UUID newClientId = UUID.randomUUID();
         UUID newClientSecret = UUID.randomUUID();
 
@@ -169,7 +169,7 @@ public class UserService {
         this.sendMailWithCredentials(user.get(), "JIRA TRACKER - CREDENTIALS UPDATE", emailBody);
     }
 
-    public void deactivateUser(Long id) {
+    public void deactivateUser(UUID id) {
         Optional<User> user = repository.findById(id);
 
         if (user.isEmpty()) {
