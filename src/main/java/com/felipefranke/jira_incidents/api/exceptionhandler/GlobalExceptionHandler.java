@@ -146,7 +146,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserLoginRequestException.class)
     public ResponseEntity<GlobalExceptionResponse> handleUserLoginRequestException(UserLoginRequestException exception) {
-        GlobalExceptionResponse response = new GlobalExceptionResponse("Invalid Login Request", exception.getMessage());
+        String message = null;
+
+        if (exception.getMessage().contains("problem:")) {
+            String[] parts = exception.getMessage().split("problem:");
+            if (parts.length > 1) {
+                message = parts[1].trim().toLowerCase();
+            } else {
+                message = "unexpected error";
+            }
+        } else {
+            message = exception.getMessage();
+        }
+
+        GlobalExceptionResponse response = new GlobalExceptionResponse("Invalid Login Request", message);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
