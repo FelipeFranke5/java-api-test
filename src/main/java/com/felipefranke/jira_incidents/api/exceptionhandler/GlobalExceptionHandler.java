@@ -158,10 +158,17 @@ public class GlobalExceptionHandler {
         return exceptionMessage;
     }
 
-    @ExceptionHandler({UserLoginRequestException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler(UserLoginRequestException.class)
     public ResponseEntity<GlobalExceptionResponse> handleUserRequestException(UserLoginRequestException exception) {
         String message = getInvalidRequestMessage(exception.getMessage());
         GlobalExceptionResponse response = new GlobalExceptionResponse("Invalid Request", message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<GlobalExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        String message = getInvalidRequestMessage(exception.getMessage());
+        GlobalExceptionResponse response = new GlobalExceptionResponse("Unreadable", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
