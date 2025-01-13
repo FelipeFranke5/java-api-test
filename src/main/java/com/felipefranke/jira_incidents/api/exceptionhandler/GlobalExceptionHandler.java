@@ -144,38 +144,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
-    @ExceptionHandler(UserLoginRequestException.class)
-    public ResponseEntity<GlobalExceptionResponse> handleUserLoginRequestException(UserLoginRequestException exception) {
-        String message = null;
-
-        if (exception.getMessage().contains("problem:")) {
-            String[] parts = exception.getMessage().split("problem:");
+    private String getInvalidRequestMessage(String exceptionMessage) {
+        if (exceptionMessage.contains("problem:")) {
+            String[] parts = exceptionMessage.split("problem:");
             if (parts.length > 1) {
-                message = parts[1].trim().toLowerCase();
+                return parts[1].trim().toLowerCase();
             } else {
-                message = "unexpected error";
+                return "unexpected error";
             }
-        } else {
-            message = exception.getMessage();
+        } else if (exceptionMessage.contains("Required request body is missing")) {
+            return "missing request body";
         }
-
-        GlobalExceptionResponse response = new GlobalExceptionResponse("Invalid Login Request", message);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return exceptionMessage;
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<GlobalExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        String message = null;
-
-        if (exception.getMessage().contains("Required request body is missing")) {
-            message = "missing request body";
-        } else {
-            message = exception.getMessage();
-        }
-
-        GlobalExceptionResponse response = new GlobalExceptionResponse("Invalid Login Request", message);
-
+    @ExceptionHandler({UserLoginRequestException.class, HttpMessageNotReadableException.class})
+    public ResponseEntity<GlobalExceptionResponse> handleUserRequestException(UserLoginRequestException exception) {
+        String message = getInvalidRequestMessage(exception.getMessage());
+        GlobalExceptionResponse response = new GlobalExceptionResponse("Invalid Request", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
