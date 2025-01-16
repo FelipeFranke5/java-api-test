@@ -49,5 +49,8 @@ jobs:
       - name: PULL IMAGE FROM DOCKERHUB
         run: sudo docker pull ${{secrets.DOCKER_USERNAME}}/deploy_jira:latest
 
+      - name: REMOVE EXISTING CONTAINER IF ANY
+        run: sudo docker rm -f ${{secrets.DOCKER_USERNAME}}/deploy_jira
+
       - name: RUN DOCKER CONTAINER
         run: sudo docker run -d -p 8080:8080 ${{secrets.DOCKER_USERNAME}}/deploy_jira
