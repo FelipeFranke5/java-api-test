@@ -31,7 +31,7 @@ jobs:
           java-version: '23'
 
       - name: BUILD PROJECT
-        run: mvn clean install -DskipTests
+        run: mvn clean package -DskipTests
 
       - name: AUTHENTICATE TO DOCKER HUB
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
