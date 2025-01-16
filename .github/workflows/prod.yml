@@ -50,4 +50,4 @@ jobs:
         run: sudo docker pull ${{secrets.DOCKER_USERNAME}}/deploy_jira:latest
 
       - name: RUN DOCKER CONTAINER
-        run: sudo docker run -d -p 8080:8080 --name ${{secrets.DOCKER_USERNAME}}/deploy_jira .
+        run: sudo docker run -d -p 8080:8080 ${{secrets.DOCKER_USERNAME}}/deploy_jira
