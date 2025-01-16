@@ -41,3 +41,13 @@ jobs:
 
       - name: PUSH IMAGE TO DOCKERHUB
         run: docker push ${{secrets.DOCKER_USERNAME}}/deploy_jira
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: PULL IMAGE FROM DOCKERHUB
+        run: docker pull ${{secrets.DOCKER_USERNAME}}/deploy_jira:latest
+
+      - name: RUN DOCKER CONTAINER
+        run: docker run -d -p 8080:8080 --name deploy_jira
