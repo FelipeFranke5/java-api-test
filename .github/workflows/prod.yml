@@ -63,7 +63,7 @@ jobs:
 
       - name: TRANSFER ENV FILE TO EC2
         run: |
-          scp -i ec2-ssh-key.pem .env ${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
+          scp -i -v ec2-ssh-key.pem .env ${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
 
       - name: CLEANUP SSH KEY
         run: rm -f ec2-ssh-key.pem
