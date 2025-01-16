@@ -59,7 +59,7 @@ jobs:
       - name: SETUP SSH KEY FOR AWS
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2-ssh-key.pem
-          chmod 600 ec2-ssh-key.pem
+          chmod 400 ec2-ssh-key.pem
 
       - name: TRANSFER ENV FILE TO EC2
         run: |
