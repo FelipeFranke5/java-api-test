@@ -68,15 +68,13 @@ jobs:
           chmod 400 ec2-ssh-key.pem
 
       - name: TRANSFER ENV FILE TO EC2
-        run: |
-          scp -i ec2-ssh-key.pem .env ${{ secrets.EC2_HOST_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
+        run: scp -i ec2-ssh-key.pem .env ${{ secrets.EC2_HOST_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
+
+      - name: TRANSFER DOCKER COMMANDS SCRIPT TO EC2
+        run: scp -i ec2-ssh-key.pem docker_commands.sh ${{ secrets.EC2_HOST_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
 
       - name: CLEANUP SSH KEY
         run: rm -f ec2-ssh-key.pem
-
-      - name: TRANSFER DOCKER COMMANDS SCRIPT TO EC2
-        run: |
-          scp -i ec2-ssh-key.pem /home/runner/work/java-api-test/java-api-test/docker_commands.sh ${{ secrets.EC2_HOST_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
 
   deploy:
     needs: build
