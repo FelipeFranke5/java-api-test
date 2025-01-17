@@ -86,7 +86,9 @@ public class UserService {
             .append("\n")
             .append("ClientId: " + user.getClientId().toString())
             .append("\n")
-            .append("ClientSecret: " + user.getClientSecret().toString());
+            .append("ClientSecret: " + user.getClientSecret().toString())
+            .append("\n")
+            .append("UserId: " + user.getId());
 
         return bodyBuilder;
     }
@@ -114,7 +116,9 @@ public class UserService {
             .append("\n")
             .append("ClientId: " + user.getClientId().toString())
             .append("\n")
-            .append("ClientSecret: " + user.getClientSecret().toString());
+            .append("ClientSecret: " + user.getClientSecret().toString())
+            .append("\n")
+            .append("UserId: " + user.getId());
 
         return bodyBuilder;
     }
