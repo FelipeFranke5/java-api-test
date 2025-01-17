@@ -85,8 +85,8 @@ jobs:
 
       - name: REMOVE EXISTING CONTAINER IF ANY
         run: |
-          chmod +x ${{ secrets.EC2_PATH }}/docker_commands.sh
-          sudo ${{ secrets.EC2_PATH }}/docker_commands.sh
+          chmod +x ${{ secrets.EC2_DOCKER_COMMANDS_FILEPATH }}
+          sudo ${{ secrets.EC2_DOCKER_COMMANDS_FILEPATH }}
 
       - name: RUN DOCKER CONTAINER
         run: sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/deploy_jira --env-file ${{ secrets.EC2_ENVFILE_PATH }}}}
