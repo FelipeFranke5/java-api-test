@@ -74,6 +74,10 @@ jobs:
       - name: CLEANUP SSH KEY
         run: rm -f ec2-ssh-key.pem
 
+      - name: TRANSFER DOCKER COMMANDS SCRIPT TO EC2
+        run: |
+          scp -i ec2-ssh-key.pem docker_commands.sh ${{ secrets.EC2_HOST_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
+
   deploy:
     needs: build
     runs-on: self-hosted
@@ -82,7 +86,9 @@ jobs:
         run: sudo docker pull ${{ secrets.DOCKER_USERNAME }}/deploy_jira:latest
 
       - name: REMOVE EXISTING CONTAINER IF ANY
-        run: sudo docker rm -f ${{ secrets.DOCKER_USERNAME }}/deploy_jira
+        run: |
+          chmod +x ${{ secrets.EC2_PATH }}/docker_commands.sh
+          sudo ${{ secrets.EC2_PATH }}/docker_commands.sh
 
       - name: RUN DOCKER CONTAINER
-        run: sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/deploy_jira --env-file ${{ secrets.EC2_PATH }}
+        run: sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/deploy_jira --env-file ${{ secrets.EC2_ENVFILE_PATH }}}}
