@@ -39,7 +39,7 @@ Este é um projeto pessoal desenvolvido em **Spring Boot**, que implementa uma A
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
-- **Java JDK 23** (versões posteriores não são suportadas).
+- **Java JDK 23** (versões inferiores não são suportadas).
 - Maven
 - Docker (opcional para execução com container)
 
