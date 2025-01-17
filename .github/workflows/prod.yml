@@ -76,7 +76,7 @@ jobs:
 
       - name: TRANSFER DOCKER COMMANDS SCRIPT TO EC2
         run: |
-          scp -i ec2-ssh-key.pem docker_commands.sh ${{ secrets.EC2_HOST_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
+          scp -i ec2-ssh-key.pem /home/runner/work/java-api-test/java-api-test/docker_commands.sh ${{ secrets.EC2_HOST_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
 
   deploy:
     needs: build
