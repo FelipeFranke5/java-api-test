@@ -91,4 +91,4 @@ jobs:
       - name: RUN DOCKER CONTAINER
         run: |
           chmod 644 ${{ secrets.EC2_ENVFILE_PATH }}
-          sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/deploy_jira --env-file ${{ secrets.EC2_ENVFILE_PATH }}
+          sudo docker run -d -p 8080:8080 --env-file ${{ secrets.EC2_ENVFILE_PATH }} ${{ secrets.DOCKER_USERNAME }}/deploy_jira
