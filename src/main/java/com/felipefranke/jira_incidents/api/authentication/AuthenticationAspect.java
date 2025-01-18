@@ -49,7 +49,7 @@ public class AuthenticationAspect {
         }
 
         User user = userService.getOneUserById(userId);
-        HeaderAuthentication headerAuthentication = new HeaderAuthentication(user, authorizationHeader, acceptHeader);
+        HeaderAuthentication headerAuthentication = new HeaderAuthentication(user, authorizationHeader);
         headerAuthentication.validateHeader();
     }
 }

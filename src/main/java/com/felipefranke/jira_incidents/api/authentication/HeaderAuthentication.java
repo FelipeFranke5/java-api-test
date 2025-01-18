@@ -3,19 +3,7 @@ package com.felipefranke.jira_incidents.api.authentication;
 import com.felipefranke.jira_incidents.api.user.User;
 import com.felipefranke.jira_incidents.api.user.UserCredentialsUtil;
 
-public record HeaderAuthentication(User user, String authorizationHeader, String acceptHeader) {
-    public void validateAcceptHeaderIsNotNull() {
-        if (acceptHeader == null) {
-            throw new InvalidAcceptHeaderException("accept header is required");
-        }
-    }
-
-    public void validateAcceptHeaderIsXml() {
-        if (!acceptHeader.equals("application/xml")) {
-            throw new InvalidAcceptHeaderException("accept header should be 'text/xml'");
-        }
-    }
-
+public record HeaderAuthentication(User user, String authorizationHeader) {
     public void validateFirstPartEqualsBase64(String firstPart) {
         if (!firstPart.equals("Base64")) {
             throw new InvalidAuthorizationHeaderException("invalid authorization header type");
@@ -54,7 +42,5 @@ public record HeaderAuthentication(User user, String authorizationHeader, String
         String[] parts = authorizationHeader.split(" ", 2);
         String encodedCredentials = getString(parts);
         validateUserTokenEqualsEncodedCredentials(parts[1], encodedCredentials);
-        validateAcceptHeaderIsNotNull();
-        validateAcceptHeaderIsXml();
     }
 }

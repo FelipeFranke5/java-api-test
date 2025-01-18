@@ -37,8 +37,7 @@ public class TicketController {
     @GetMapping(path = "/list_all/user/{userId}")
     public ResponseEntity<Tickets> listTickets(
         @PathVariable UUID userId,
-        @RequestHeader("Authorization") String authorizationHeader,
-        @RequestHeader("Accept") String acceptHeader
+        @RequestHeader("Authorization") String authorizationHeader
     ) {
         User user = userService.getOneUserById(userId);
         List<Ticket> tickets = ticketService.getFilteredTicketList(user);
@@ -66,8 +65,7 @@ public class TicketController {
     public ResponseEntity<TicketResponse> oneTicket(
         @PathVariable UUID userId,
         @PathVariable UUID ticketId,
-        @RequestHeader("Authorization") String authorizationHeader,
-        @RequestHeader("Accept") String acceptHeader
+        @RequestHeader("Authorization") String authorizationHeader
     ) {
         User user = userService.getOneUserById(userId);
         Ticket ticket = ticketService.getTicketByUserAndId(user, ticketId);
@@ -87,8 +85,7 @@ public class TicketController {
     @GetMapping(path = "/extract/email/user/{userId}")
     public ResponseEntity<Void> sendNotificationWithTickets(
         @PathVariable UUID userId,
-        @RequestHeader("Authorization") String authorizationHeader,
-        @RequestHeader("Accept") String acceptHeader
+        @RequestHeader("Authorization") String authorizationHeader
     ) {
         User user = userService.getOneUserById(userId);
         ticketService.sendEmailNotificationWithTickets(user);
@@ -101,7 +98,6 @@ public class TicketController {
     public ResponseEntity<Void> saveTicket(
         @PathVariable UUID userId,
         @RequestHeader("Authorization") String authorizationHeader,
-        @RequestHeader("Accept") String acceptHeader,
         @RequestBody TicketRequest ticketRequest
     ) {
         User user = userService.getOneUserById(userId);
@@ -115,8 +111,7 @@ public class TicketController {
     public ResponseEntity<Void> markDone(
         @PathVariable UUID userId,
         @PathVariable UUID ticketId,
-        @RequestHeader("Authorization") String authorizationHeader,
-        @RequestHeader("Accept") String acceptHeader
+        @RequestHeader("Authorization") String authorizationHeader
     ) {
         Ticket ticket = ticketService.getTicket(ticketId);
         ticketService.markTicketAsCompleted(ticket);
