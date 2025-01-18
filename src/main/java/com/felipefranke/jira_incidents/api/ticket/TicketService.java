@@ -9,6 +9,7 @@ import com.felipefranke.jira_incidents.api.user.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -61,7 +62,14 @@ public class TicketService {
     }
 
     public List<Ticket> getFilteredTicketList(User user) {
-        return ticketRepository.findByUserOrderByCreationDateTimeDesc(user);
+        List<Ticket> finalList = new ArrayList<>();
+        List<Ticket> unfilteredTickets = ticketRepository.findByUserOrderByCreationDateTimeDesc(user);
+        for (Ticket ticket : unfilteredTickets) {
+            if (!ticket.isCompleted()) {
+                finalList.add(ticket);
+            }
+        }
+        return finalList;
     }
 
     public void markTicketAsCompleted(Ticket ticket) {
@@ -138,7 +146,9 @@ public class TicketService {
 
         for (Ticket ticket : tickets) {
             messageBody.append(
-                "SF: " + ticket.getMailToCase().getCaseNumber() + " - CHAMADO: " + ticket.getJiraCase().getJiraProtocol() + "\n"
+                "SF: " + ticket.getMailToCase().getCaseNumber()
+                + " - JIRA: "
+                + ticket.getJiraCase().getJiraProtocol() + "\n"
             );
         }
 
