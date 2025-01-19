@@ -9,10 +9,10 @@ import com.felipefranke.jira_incidents.api.user.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -46,15 +46,18 @@ public class TicketService {
     }
 
     public Ticket getTicket(UUID id) {
+        verifyIdIsValid(id);
+        return ticketRepository.findById(id).orElseThrow(TicketNotFoundException::new);
+    }
+
+    private static void verifyIdIsValid(UUID id) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null or empty.");
         }
-
-        return ticketRepository.findById(id).orElseThrow(() -> new TicketNotFoundException());
     }
 
     public Ticket getTicketByUserAndId(User user, UUID id) {
-        return ticketRepository.findByUserAndId(user, id).orElseThrow(() -> new TicketNotFoundException());
+        return ticketRepository.findByUserAndId(user, id).orElseThrow(TicketNotFoundException::new);
     }
 
     public List<Ticket> getTicketList() {
@@ -62,17 +65,19 @@ public class TicketService {
     }
 
     public List<Ticket> getFilteredTicketList(User user) {
-        List<Ticket> finalList = new ArrayList<>();
-        List<Ticket> unfilteredTickets = ticketRepository.findByUserOrderByCreationDateTimeDesc(user);
-        for (Ticket ticket : unfilteredTickets) {
-            if (!ticket.isCompleted()) {
-                finalList.add(ticket);
-            }
-        }
-        return finalList;
+        return ticketRepository.
+                findByUserOrderByCreationDateTimeDesc(user).stream()
+                    .filter(ticket -> !ticket.isCompleted())
+                    .toList();
     }
 
     public void markTicketAsCompleted(Ticket ticket) {
+        checkIfTicketIsNullOrCompleted(ticket);
+        ticket.setCompleted(true);
+        ticketRepository.save(ticket);
+    }
+
+    private static void checkIfTicketIsNullOrCompleted(Ticket ticket) {
         if (ticket == null) {
             throw new IllegalArgumentException("the ticket cannot be null or empty");
         }
@@ -80,29 +85,13 @@ public class TicketService {
         if (ticket.isCompleted()) {
             throw new IllegalArgumentException("ticket already completed");
         }
-
-        ticket.setCompleted(true);
-        ticketRepository.save(ticket);
     }
 
-    public Ticket saveTicket(TicketRequest request, User authenticatedUser) {
-        if (authenticatedUser == null) {
-            throw new IllegalArgumentException("cannot save ticket for empty user.");
-        }
-
-        if (request == null) {
-            throw new IllegalArgumentException("the request cannot be empty or null.");
-        }
-
+    public void saveTicket(TicketRequest request, User authenticatedUser) {
+        validateUserAndRequest(request, authenticatedUser);
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date jiraCreationDate = null;
-
-        try {
-            jiraCreationDate = dateFormatter.parse(request.jiraCreationDate());
-        } catch (ParseException exception) {
-            throw new IllegalArgumentException("jiraCreationDate must follow this format: 'yyyy-MM-dd'");
-        }
-
+        Date jiraCreationDate;
+        jiraCreationDate = getJiraCreationDate(request, dateFormatter);
         JiraUtil jiraUtil = new JiraUtil(jiraCreationDate);
 
         MailToCase newMailToCase = MailToCase.builder()
@@ -128,7 +117,27 @@ public class TicketService {
             .jiraCase(newJiraCase)
             .build();
 
-        return ticketRepository.save(newTicket);
+        ticketRepository.save(newTicket);
+    }
+
+    private static Date getJiraCreationDate(TicketRequest request, SimpleDateFormat dateFormatter) {
+        Date jiraCreationDate;
+        try {
+            jiraCreationDate = dateFormatter.parse(request.jiraCreationDate());
+        } catch (ParseException exception) {
+            throw new IllegalArgumentException("jiraCreationDate must follow this format: 'yyyy-MM-dd'");
+        }
+        return jiraCreationDate;
+    }
+
+    private static void validateUserAndRequest(TicketRequest request, User authenticatedUser) {
+        if (authenticatedUser == null) {
+            throw new IllegalArgumentException("cannot save ticket for empty user.");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("the request cannot be empty or null.");
+        }
     }
 
     public void sendMail(User user, String subject, StringBuilder body) {
@@ -143,15 +152,11 @@ public class TicketService {
     public StringBuilder buildMessageWithTickets(User user) {
         List<Ticket> tickets = getFilteredTicketList(user);
         StringBuilder messageBody = new StringBuilder();
-
-        for (Ticket ticket : tickets) {
-            messageBody.append(
-                "SF: " + ticket.getMailToCase().getCaseNumber()
-                + " - JIRA: "
-                + ticket.getJiraCase().getJiraProtocol() + "\n"
-            );
-        }
-
+        tickets.forEach(ticket -> messageBody
+                .append("SF: ")
+                .append(ticket.getMailToCase().getCaseNumber())
+                .append(" - JIRA: ").append(ticket.getJiraCase().getJiraProtocol())
+                .append("\n"));
         return messageBody;
     }
 
